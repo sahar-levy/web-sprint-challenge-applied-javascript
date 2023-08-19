@@ -51,7 +51,7 @@ const tabsAppender = (selector) => {
       targetElement.appendChild(tabsElement);
     })
     .catch(err => {
-      console.log('Error!');
+      console.log(err);
     })
 }
 

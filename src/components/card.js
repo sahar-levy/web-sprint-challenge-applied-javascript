@@ -1,23 +1,8 @@
-const Card = (article) => {
-  // TASK 5
-  // ---------------------
-  // Implement this function, which should return the markup you see below.
-  // It takes as its only argument an "article" object with `headline`, `authorPhoto` and `authorName` properties.
-  // The tags used, the hierarchy of elements and their attributes must match the provided markup exactly!
-  // The text inside elements will be set using their `textContent` property (NOT `innerText`).
-  // Add a listener for click events so that when a user clicks on a card, the headline of the article is logged to the console.
-  //
-  // <div class="card">
-  //   <div class="headline">{ headline }</div>
-  //   <div class="author">
-  //     <div class="img-container">
-  //       <img src={ authorPhoto }>
-  //     </div>
-  //     <span>By { authorName }</span>
-  //   </div>
-  // </div>
+import axios from 'axios';
 
-  const tabsContainer = document.createElement('div');
+const Card = (article) => {
+  // Create elements
+  const cardsContainer = document.createElement('div');
   const card = document.createElement('div');
   const articleHeadline = document.createElement('div');
   const authorInfo = document.createElement('div');
@@ -25,31 +10,36 @@ const Card = (article) => {
   const img = document.createElement('img');
   const authorName = document.createElement('span');
 
-  tabsContainer.classList.add('tabs-container');
+  // Add classes
+  cardsContainer.classList.add('cards-container');
   card.classList.add('card');
   articleHeadline.classList.add('headline');
   authorInfo.classList.add('author');
   imgContainer.classList.add('img-container');
 
-  // articleHeadline.textContent = article.headline;
-  // authorName.textContent = article.authorName;
+  // Set content
+  articleHeadline.textContent = article.headline;
+  authorName.textContent = article.authorName;
 
-  // img.src = article.authorPhoto;
-  // img.alt = article.authorName;
+  // Set image attributes
+  img.src = article.authorPhoto;
+  img.alt = article.authorName;
 
-  tabsContainer.appendChild(card);
+  // Construct hierarchy
+  cardsContainer.appendChild(card);
   card.appendChild(articleHeadline);
   card.appendChild(authorInfo);
   authorInfo.appendChild(imgContainer);
-  authorInfo.appendChild(img);
+  imgContainer.appendChild(img);
+  authorInfo.appendChild(authorName);
 
-  // card.addEventListener('click', () => {
-  //   console.log(article.headline);
-  // });
+  // Add click event listener
+  card.addEventListener('click', () => {
+    console.log(article.headline);
+  });
 
- return card;
+  return cardsContainer;
 }
-Card();
 
 const cardAppender = (selector) => {
   // TASK 6
@@ -61,6 +51,56 @@ const cardAppender = (selector) => {
   // Append each card to the element in the DOM that matches the selector passed to the function.
   //
 
+  axios.get('http://localhost:5001/api/articles')
+    .then(resp => {
+      // console.log(resp);
+      const articles = resp.data.articles;
+      // console.log(articles.javascript);
+
+      articles.javascript.forEach(article => {
+        const cardElement = Card(article);
+
+        const targetElement = document.querySelector(selector);
+
+        targetElement.appendChild(cardElement);
+      });
+
+      articles.bootstrap.forEach(article => {
+        const cardElement = Card(article);
+
+        const targetElement = document.querySelector(selector);
+
+        targetElement.appendChild(cardElement);
+      });
+
+      articles.technology.forEach(article => {
+        const cardElement = Card(article);
+
+        const targetElement = document.querySelector(selector);
+
+        targetElement.appendChild(cardElement);
+      });
+
+      articles.jquery.forEach(article => {
+        const cardElement = Card(article);
+
+        const targetElement = document.querySelector(selector);
+
+        targetElement.appendChild(cardElement);
+      });
+
+      articles.node.forEach(article => {
+        const cardElement = Card(article);
+
+        const targetElement = document.querySelector(selector);
+
+        targetElement.appendChild(cardElement);
+      });
+
+    })
+    .catch(err => console.log(err));
+
+    return cardAppender;
 }
 
 export { Card, cardAppender }
